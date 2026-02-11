@@ -1,0 +1,19 @@
+.calendar-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.calendar-page .react-calendar {
+  width: 100%;
+  max-width: 500px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.events {
+  width: 100%;
+  max-width: 500px;
+  text-align: left;
+}
