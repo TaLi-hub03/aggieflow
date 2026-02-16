@@ -1,0 +1,27 @@
+{
+  "name": "aggieflow-backend",
+  "version": "1.0.0",
+  "description": "Backend for AggieFlow collaborative dashboard",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "aggieflow",
+    "backend",
+    "express",
+    "socket.io"
+  ],
+  "author": "Moses Uyadi Jr.",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^4.18.2",
+    "socket.io": "^4.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
