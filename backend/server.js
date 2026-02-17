@@ -18,12 +18,14 @@ app.get("/", (req, res) => res.send("🚀 AggieFlow Backend Running"));
 // Routes
 const taskRoutes = require("./routes/tasks");
 const teamRoutes = require("./routes/teams");
+const eventRoutes = require("./routes/events");
 
 // Pass io for real-time events
 taskRoutes.setSocketIO(io);
 
 app.use("/api/tasks", taskRoutes);
 app.use("/api/teams", teamRoutes);
+app.use("/api/events", eventRoutes);
 
 // Socket.IO connection logging
 io.on("connection", (socket) => {
