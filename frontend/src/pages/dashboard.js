@@ -3,6 +3,7 @@ import { io as ioClient } from "socket.io-client";
 
 function Dashboard() {
   const [events, setEvents] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     const load = async () => {
@@ -27,10 +28,18 @@ function Dashboard() {
         return merged;
       });
     });
+    // task real-time updates
+    socket.on("taskAdded", (t) => setTasks((prev) => [...prev, t]));
+    socket.on("taskUpdated", (t) => setTasks((prev) => prev.map(p => p.id === t.id ? t : p)));
+    socket.on("taskDeleted", (t) => setTasks((prev) => prev.filter(p => p.id !== t.id)));
     return () => socket.disconnect();
   }, []);
 
   const upcoming = events.slice(0, 5);
+  const recentTasks = tasks.slice().reverse().slice(0, 5);
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter(t => t.completed).length;
+  const inProgressTasks = totalTasks - completedTasks;
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
@@ -39,17 +48,17 @@ function Dashboard() {
       <div style={{ marginTop: "20px", display: "flex", gap: "20px" }}>
         <div style={cardStyle}>
           <h3>Total Tasks</h3>
-          <p>12</p>
+          <p>{totalTasks}</p>
         </div>
 
         <div style={cardStyle}>
           <h3>Completed</h3>
-          <p>5</p>
+          <p>{completedTasks}</p>
         </div>
 
         <div style={cardStyle}>
           <h3>In Progress</h3>
-          <p>7</p>
+          <p>{inProgressTasks}</p>
         </div>
       </div>
 
@@ -66,6 +75,22 @@ function Dashboard() {
           </ul>
         ) : (
           <p>No upcoming events</p>
+        )}
+      </div>
+
+      <div style={{ marginTop: 30 }}>
+        <h2>Recent Tasks</h2>
+        {recentTasks.length ? (
+          <ul>
+            {recentTasks.map((t) => (
+              <li key={t.id} style={{ marginBottom: 8 }}>
+                <strong>{t.title}</strong> — {t.assignee || "Unassigned"} {t.completed ? "(Done)" : ""}
+                {t.description ? <div style={{ color: "#555" }}>{t.description}</div> : null}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No tasks yet</p>
         )}
       </div>
     </div>
