@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 function Dashboard() {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch("/api/events");
+        if (res.ok) {
+          const data = await res.json();
+          data.sort((a, b) => (a.date > b.date ? 1 : a.date < b.date ? -1 : 0));
+          setEvents(data);
+        }
+      } catch (err) {
+        console.error("Failed to load events for dashboard", err);
+      }
+    };
+    load();
+  }, []);
+
+  const upcoming = events.slice(0, 5);
+
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
       <h1>AggieFlow Dashboard</h1>
+
       <div style={{ marginTop: "20px", display: "flex", gap: "20px" }}>
         <div style={cardStyle}>
           <h3>Total Tasks</h3>
@@ -19,6 +40,22 @@ function Dashboard() {
           <h3>In Progress</h3>
           <p>7</p>
         </div>
+      </div>
+
+      <div style={{ marginTop: 30 }}>
+        <h2>Upcoming Events</h2>
+        {upcoming.length ? (
+          <ul>
+            {upcoming.map((ev) => (
+              <li key={ev.id} style={{ marginBottom: 8 }}>
+                <strong>{ev.title}</strong> — {ev.date} {ev.time ? `@ ${ev.time}` : ""}
+                {ev.description ? <div style={{ color: "#555" }}>{ev.description}</div> : null}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No upcoming events</p>
+        )}
       </div>
     </div>
   );

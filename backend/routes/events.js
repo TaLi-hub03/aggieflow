@@ -8,7 +8,10 @@ let events = [];
 // GET events by date query parameter
 router.get("/", (req, res) => {
   const { date } = req.query;
-  if (!date) return res.status(400).send("date query parameter required");
+  if (!date) {
+    // return all events when no date is specified
+    return res.json(events);
+  }
   const result = events.filter((e) => e.date === date);
   res.json(result);
 });
