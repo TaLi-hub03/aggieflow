@@ -5,23 +5,29 @@ import "../styles/calendarPage.css";
 
 function CalendarPage() {
   const [date, setDate] = useState(new Date());
-  const STORAGE_KEY = "aggieflow_calendar_events_v1";
+  // events keyed by date for highlighting and list
+  const [eventsByDate, setEventsByDate] = useState({});
 
-  const defaultEvents = {
-    "2026-02-14": [
-      { id: 1, title: "Valentine's Day Event", time: "", description: "" },
-    ],
-    "2026-02-20": [{ id: 2, title: "Project Meeting", time: "10:00", description: "" }],
-  };
-
-  const [events, setEvents] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : defaultEvents;
-    } catch (e) {
-      return defaultEvents;
-    }
-  });
+  // load events for selected date and cache
+  useEffect(() => {
+    const load = async () => {
+      const key = formatDate(date);
+      try {
+        const response = await fetch(`/api/events?date=${key}`);
+        if (response.ok) {
+          const data = await response.json();
+          setEventsByDate((prev) => ({ ...prev, [key]: data }));
+        } else {
+          console.error("failed to fetch events", response.status);
+          setEventsByDate((prev) => ({ ...prev, [key]: [] }));
+        }
+      } catch (err) {
+        console.error(err);
+        setEventsByDate((prev) => ({ ...prev, [key]: [] }));
+      }
+    };
+    load();
+  }, [date]);
 
   // Modal / form state
   const [showModal, setShowModal] = useState(false);
@@ -30,11 +36,6 @@ function CalendarPage() {
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
-    } catch (e) {}
-  }, [events]);
 
   function formatDate(d) {
     if (!d) return "";
@@ -42,7 +43,7 @@ function CalendarPage() {
     return dd.toISOString().split("T")[0];
   }
 
-  const selectedEvents = events[formatDate(date)] || [];
+  const selectedEvents = eventsByDate[formatDate(date)] || [];
 
   function openModal() {
     setEventDate(formatDate(date));
@@ -56,20 +57,34 @@ function CalendarPage() {
     setShowModal(false);
   }
 
-  function handleAddEvent(e) {
+  async function handleAddEvent(e) {
     e.preventDefault();
     if (!title.trim() || !eventDate) return;
-    const newEvent = {
-      id: Date.now(),
+    const payload = {
+      date: eventDate,
       title: title.trim(),
       time: time || "",
       description: description || "",
     };
-    setEvents((prev) => {
-      const key = formatDate(eventDate);
-      const list = prev[key] ? [...prev[key], newEvent] : [newEvent];
-      return { ...prev, [key]: list };
-    });
+    try {
+      const response = await fetch("/api/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (response.ok) {
+        const added = await response.json();
+        const key = formatDate(eventDate);
+        setEventsByDate((prev) => {
+          const list = prev[key] ? [...prev[key], added] : [added];
+          return { ...prev, [key]: list };
+        });
+      } else {
+        console.error("failed to add event", response.status);
+      }
+    } catch (err) {
+      console.error(err);
+    }
     setShowModal(false);
   }
 
@@ -81,7 +96,7 @@ function CalendarPage() {
         value={date}
         tileClassName={({ date: d, view }) => {
           if (view !== "month") return null;
-          return events[formatDate(d)] ? "has-event" : null;
+          return eventsByDate[formatDate(d)] && eventsByDate[formatDate(d)].length ? "has-event" : null;
         }}
       />
 
