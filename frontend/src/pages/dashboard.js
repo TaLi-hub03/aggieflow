@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { io as ioClient } from "socket.io-client";
 
 function Dashboard() {
   const [events, setEvents] = useState([]);
@@ -17,6 +18,16 @@ function Dashboard() {
       }
     };
     load();
+    // Socket.IO: update when new events are added elsewhere
+    const socket = ioClient();
+    socket.on("eventAdded", (ev) => {
+      setEvents((prev) => {
+        const merged = [...prev, ev];
+        merged.sort((a, b) => (a.date > b.date ? 1 : a.date < b.date ? -1 : 0));
+        return merged;
+      });
+    });
+    return () => socket.disconnect();
   }, []);
 
   const upcoming = events.slice(0, 5);

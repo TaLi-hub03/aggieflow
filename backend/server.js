@@ -22,6 +22,7 @@ const eventRoutes = require("./routes/events");
 
 // Pass io for real-time events
 taskRoutes.setSocketIO(io);
+eventRoutes.setSocketIO && eventRoutes.setSocketIO(io);
 
 app.use("/api/tasks", taskRoutes);
 app.use("/api/teams", teamRoutes);

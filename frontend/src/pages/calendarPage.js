@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { io as ioClient } from "socket.io-client";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../styles/calendarPage.css";
@@ -28,6 +29,18 @@ function CalendarPage() {
     };
     load();
   }, [date]);
+
+  // Socket.IO: listen for events added by other clients
+  useEffect(() => {
+    const socket = ioClient();
+    socket.on("eventAdded", (ev) => {
+      setEventsByDate((prev) => {
+        const list = prev[ev.date] ? [...prev[ev.date], ev] : [ev];
+        return { ...prev, [ev.date]: list };
+      });
+    });
+    return () => socket.disconnect();
+  }, []);
 
   // Modal / form state
   const [showModal, setShowModal] = useState(false);
