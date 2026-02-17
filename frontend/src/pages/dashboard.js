@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { io as ioClient } from "socket.io-client";
+import "../styles/dashboard.css";
 
 function Dashboard() {
   const [events, setEvents] = useState([]);
@@ -42,7 +43,7 @@ function Dashboard() {
   const inProgressTasks = totalTasks - completedTasks;
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+    <div className="dashboard-root" style={{ padding: "20px", fontFamily: "Arial" }}>
       <h1>AggieFlow Dashboard</h1>
 
       <div style={{ marginTop: "20px", display: "flex", gap: "20px" }}>
