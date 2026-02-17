@@ -17,3 +17,96 @@
   max-width: 500px;
   text-align: left;
 }
+
+.events-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.add-event-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #1976d2;
+  color: white;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+.event-form label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.event-form input,
+.event-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn.primary { background: #1976d2; color: #fff; }
+.btn.secondary { background: #eee; color: #333; }
+
+.events-list { list-style: none; padding: 0; margin: 0; }
+.event-item { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+.event-main { display: flex; gap: 8px; align-items: center; }
+.event-time { color: #666; font-size: 0.95em; }
+.event-desc { color: #444; margin-top: 6px; font-size: 0.95em; }
+
+/* Highlight days with events */
+.react-calendar__tile.has-event {
+  background: #bfefff; /* baby blue */
+  border-radius: 6px;
+}
+
+.react-calendar__tile.has-event:enabled:hover,
+.react-calendar__tile.has-event:enabled:focus {
+  background: #aee8ff;
+}
