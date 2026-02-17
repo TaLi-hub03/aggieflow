@@ -50,9 +50,14 @@ export default function Team() {
         setMembers((prev) => [...prev, newMember]);
         setFormData({ name: "", email: "", role: "Member" });
         setShowAddForm(false);
+      } else {
+        const errMsg = await res.text();
+        console.error("Failed to add member:", res.status, errMsg);
+        alert("Failed to add member: " + errMsg);
       }
     } catch (err) {
       console.error("Failed to add member", err);
+      alert("Error: " + err.message);
     }
   }
 
