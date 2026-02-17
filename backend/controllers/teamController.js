@@ -21,8 +21,8 @@ const getTeams = (req, res) => {
 };
 
 const getTeamMembers = (req, res) => {
-  const { teamId } = req.params;
-  const team = teams.find(t => t.id == teamId);
+  const teamId = parseInt(req.params.teamId);
+  const team = teams.find(t => t.id === teamId);
   if (!team) return res.status(404).send("Team not found");
   res.json(team.members || []);
 };
@@ -42,8 +42,8 @@ const createTeam = (req, res) => {
 };
 
 const addMember = (req, res, io) => {
-  const { teamId } = req.params;
-  const team = teams.find(t => t.id == teamId);
+  const teamId = parseInt(req.params.teamId);
+  const team = teams.find(t => t.id === teamId);
   if (!team) return res.status(404).send("Team not found");
 
   const { name, email, role } = req.body;
@@ -68,11 +68,12 @@ const addMember = (req, res, io) => {
 };
 
 const removeMember = (req, res, io) => {
-  const { teamId, memberId } = req.params;
-  const team = teams.find(t => t.id == teamId);
+  const teamId = parseInt(req.params.teamId);
+  const memberId = parseInt(req.params.memberId);
+  const team = teams.find(t => t.id === teamId);
   if (!team) return res.status(404).send("Team not found");
 
-  const idx = (team.members || []).findIndex(m => m.id == memberId);
+  const idx = (team.members || []).findIndex(m => m.id === memberId);
   if (idx === -1) return res.status(404).send("Member not found");
 
   const removed = team.members.splice(idx, 1)[0];
@@ -83,12 +84,13 @@ const removeMember = (req, res, io) => {
 };
 
 const updateMemberStatus = (req, res, io) => {
-  const { teamId, memberId } = req.params;
+  const teamId = parseInt(req.params.teamId);
+  const memberId = parseInt(req.params.memberId);
   const { status } = req.body;
-  const team = teams.find(t => t.id == teamId);
+  const team = teams.find(t => t.id === teamId);
   if (!team) return res.status(404).send("Team not found");
 
-  const member = (team.members || []).find(m => m.id == memberId);
+  const member = (team.members || []).find(m => m.id === memberId);
   if (!member) return res.status(404).send("Member not found");
 
   member.status = status || "offline";
