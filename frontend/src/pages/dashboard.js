@@ -2,6 +2,15 @@ import React, { useEffect, useState } from "react";
 import { io as ioClient } from "socket.io-client";
 import "../styles/dashboard.css";
 
+function format12HourTime(military) {
+  if (!military) return "";
+  const [h, min] = military.split(":");
+  const hour = parseInt(h);
+  const suffix = hour >= 12 ? "PM" : "AM";
+  const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+  return `${displayHour}:${min} ${suffix}`;
+}
+
 function Dashboard() {
   const [events, setEvents] = useState([]);
   const [tasks, setTasks] = useState([]);
@@ -9,14 +18,19 @@ function Dashboard() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch("/api/events");
-        if (res.ok) {
-          const data = await res.json();
+        const evRes = await fetch("/api/events");
+        if (evRes.ok) {
+          const data = await evRes.json();
           data.sort((a, b) => (a.date > b.date ? 1 : a.date < b.date ? -1 : 0));
           setEvents(data);
         }
+        const taskRes = await fetch("/api/tasks");
+        if (taskRes.ok) {
+          const taskData = await taskRes.json();
+          setTasks(taskData);
+        }
       } catch (err) {
-        console.error("Failed to load events for dashboard", err);
+        console.error("Failed to load dashboard data", err);
       }
     };
     load();
@@ -69,7 +83,7 @@ function Dashboard() {
           <ul>
             {upcoming.map((ev) => (
               <li key={ev.id} style={{ marginBottom: 8 }}>
-                <strong>{ev.title}</strong> — {ev.date} {ev.time ? `@ ${ev.time}` : ""}
+                <strong>{ev.title}</strong> — {ev.date} {ev.time ? `@ ${format12HourTime(ev.time)}` : ""}
                 {ev.description ? <div style={{ color: "#555" }}>{ev.description}</div> : null}
               </li>
             ))}

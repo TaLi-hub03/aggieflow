@@ -56,6 +56,15 @@ function CalendarPage() {
     return dd.toISOString().split("T")[0];
   }
 
+  function format12HourTime(military) {
+    if (!military) return "";
+    const [h, min] = military.split(":");
+    const hour = parseInt(h);
+    const suffix = hour >= 12 ? "PM" : "AM";
+    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+    return `${displayHour}:${min} ${suffix}`;
+  }
+
   const selectedEvents = eventsByDate[formatDate(date)] || [];
 
   function openModal() {
@@ -125,7 +134,7 @@ function CalendarPage() {
               <li key={ev.id} className="event-item">
                 <div className="event-main">
                   <strong>{ev.title}</strong>
-                  {ev.time ? <span className="event-time"> — {ev.time}</span> : null}
+                  {ev.time ? <span className="event-time"> — {format12HourTime(ev.time)}</span> : null}
                 </div>
                 {ev.description ? <div className="event-desc">{ev.description}</div> : null}
               </li>
