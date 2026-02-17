@@ -1,17 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SidebarLayout from "./layout/sidebarLayout";
 
 import Dashboard from "./pages/dashboard";
 import Tasks from "./pages/tasks";
 import CalendarPage from "./pages/calendarPage";
 import Team from "./pages/team";
 import Settings from "./pages/settings";
-import SidebarLayout from "./layout/sidebarLayout";
-
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Wrap all pages with the sidebar layout */}
         <Route element={<SidebarLayout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/tasks" element={<Tasks />} />
@@ -25,4 +25,3 @@ function App() {
 }
 
 export default App;
-
