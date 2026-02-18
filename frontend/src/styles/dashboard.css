@@ -1,0 +1,5 @@
+/* Dashboard styles */
+.dashboard-root { padding: 20px; font-family: Arial, sans-serif; }
+.dashboard-cards { margin-top: 20px; display: flex; gap: 20px; }
+.dashboard-card { padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.08); width: 150px; background: #f8fafc; text-align: center; }
+.recent-tasks li { margin-bottom: 8px; }

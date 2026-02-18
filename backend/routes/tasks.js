@@ -13,6 +13,10 @@ router.get("/", (req, res) => taskController.getTasks(req, res));
 router.post("/", (req, res) => taskController.addTask(req, res, io));
 
 // PATCH / update task
-router.patch("/:id", (req, res) => taskController.updateTask(req, res, io));
+// PUT / update task (partial update)
+router.put("/:id", (req, res) => taskController.updateTask(req, res, io));
+
+// DELETE task
+router.delete("/:id", (req, res) => taskController.deleteTask(req, res, io));
 
 module.exports = router;

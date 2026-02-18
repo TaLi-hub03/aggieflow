@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { io as ioClient } from "socket.io-client";
+import "../styles/tasks.css";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -95,11 +96,11 @@ export default function Tasks() {
   }
 
   return (
-    <div style={{ padding: 20 }}>
+    <div className="tasks-container">
       <h1>Tasks</h1>
       <div style={{ display: "flex", gap: 20 }}>
         <div style={{ flex: 1 }}>
-          <form onSubmit={editing ? saveEdit : handleAdd} style={{ marginBottom: 12 }}>
+          <form className="tasks-form" onSubmit={editing ? saveEdit : handleAdd} style={{ marginBottom: 12 }}>
             <input placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} required style={{ width: "60%", padding: 8 }} />
             <input placeholder="Assignee" value={assignee} onChange={e => setAssignee(e.target.value)} style={{ marginLeft: 8, padding: 8 }} />
             <button type="submit" style={{ marginLeft: 8, padding: "8px 12px" }}>{editing ? "Save" : "Add Task"}</button>
@@ -111,11 +112,11 @@ export default function Tasks() {
 
           <div>
             {tasks.map(t => (
-              <div key={t.id} style={{ padding: 12, border: "1px solid #eee", marginBottom: 8, borderRadius: 6, background: t.completed ? "#f0fff0" : "#fff" }}>
+              <div key={t.id} className={`task-card ${t.completed ? 'done' : ''}`}>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <div>
                     <strong>{t.title}</strong>
-                    <div style={{ fontSize: 12, color: "#666" }}>{t.assignee ? `Assigned to ${t.assignee}` : "Unassigned"}</div>
+                    <div className="meta">{t.assignee ? `Assigned to ${t.assignee}` : "Unassigned"}</div>
                   </div>
                   <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                     <button onClick={() => toggleComplete(t)}>{t.completed ? "Undo" : "Done"}</button>
@@ -129,7 +130,7 @@ export default function Tasks() {
           </div>
         </div>
 
-        <div style={{ width: 260 }}>
+        <div className="team-list">
           <h3>Team</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>

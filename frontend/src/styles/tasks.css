@@ -1,0 +1,10 @@
+/* Basic styles for Tasks page */
+.tasks-container { padding: 20px; font-family: Arial, sans-serif; }
+.tasks-form input, .tasks-form textarea { box-sizing: border-box; border: 1px solid #ddd; border-radius: 6px; }
+.tasks-form button { background: #3b82f6; color: #fff; border: none; border-radius: 6px; padding: 8px 12px; cursor: pointer; }
+.task-card { padding: 12px; border: 1px solid #eee; margin-bottom: 8px; border-radius: 8px; background: #fff; }
+.task-card .meta { font-size: 12px; color: #555; }
+.task-card.done { background: #f0fff0; }
+.team-list { width: 260px; }
+.team-list h3 { margin-top: 0; }
+.team-list button { background: #10b981; color: #fff; border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer; }
