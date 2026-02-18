@@ -7,7 +7,9 @@ function SidebarLayout() {
     <div className="layout">
       {/* Sidebar */}
       <div className="sidebar">
-        <h2 className="logo">AggieFlow</h2>
+        <NavLink to="/" className="logo">
+          <img src="/logo.png" alt="AggieFlow Logo" className="logo-img" />
+        </NavLink>
         <ul>
           <li>
             <NavLink to="/" className={({ isActive }) => (isActive ? "active-link" : "")}>

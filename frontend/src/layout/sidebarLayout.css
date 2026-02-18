@@ -10,7 +10,24 @@
 }
 
 .logo {
+  display: block;
   margin-bottom: 20px;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.logo:hover {
+  background-color: #e0e0e0;
+}
+
+.logo-img {
+  height: 60px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 ul {
