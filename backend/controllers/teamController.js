@@ -1,5 +1,6 @@
 let teams = [];
 let defaultTeamId = 1;
+const { sendWelcomeEmail } = require("../services/emailService");
 
 // Initialize with a default team
 if (teams.length === 0) {
@@ -61,6 +62,11 @@ const addMember = (req, res, io) => {
 
   if (!team.members) team.members = [];
   team.members.push(newMember);
+
+  // Send welcome email (async, don't block response)
+  sendWelcomeEmail(email, name, team.name).catch(err => 
+    console.error("Background email send failed:", err)
+  );
 
   if (io) io.emit("memberAdded", { teamId, member: newMember });
 
