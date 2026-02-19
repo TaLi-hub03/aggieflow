@@ -6,6 +6,8 @@ export default function Team() {
   const [members, setMembers] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", role: "Member" });
+  const [error, setError] = useState("");
+  const [notification, setNotification] = useState("");
   const teamId = 1; // default team
 
   useEffect(() => {
@@ -37,7 +39,18 @@ export default function Team() {
 
   async function handleAddMember(e) {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim()) return;
+    setError("");
+    
+    if (!formData.name.trim() || !formData.email.trim()) {
+      setError("Name and email are required");
+      return;
+    }
+
+    // Validate email domain
+    if (!formData.email.endsWith("@aggies.ncat.edu")) {
+      setError("Email must be from @aggies.ncat.edu domain");
+      return;
+    }
 
     try {
       const res = await fetch(`/api/teams/${teamId}/members`, {
@@ -50,14 +63,17 @@ export default function Team() {
         setMembers((prev) => [...prev, newMember]);
         setFormData({ name: "", email: "", role: "Member" });
         setShowAddForm(false);
+        
+        // Show success notification
+        setNotification(`✓ ${newMember.name} has been added to the team!`);
+        setTimeout(() => setNotification(""), 4000);
       } else {
         const errMsg = await res.text();
-        console.error("Failed to add member:", res.status, errMsg);
-        alert("Failed to add member: " + errMsg);
+        setError("Failed to add member: " + errMsg);
       }
     } catch (err) {
       console.error("Failed to add member", err);
-      alert("Error: " + err.message);
+      setError("Error: " + err.message);
     }
   }
 
@@ -96,6 +112,8 @@ export default function Team() {
 
   return (
     <div className="team-page">
+      {notification && <div className="notification success">{notification}</div>}
+      
       <div className="team-header">
         <h1>Team</h1>
         <button className="add-btn" onClick={() => setShowAddForm(!showAddForm)}>
@@ -105,6 +123,7 @@ export default function Team() {
 
       {showAddForm && (
         <div className="add-member-form">
+          {error && <div className="error-message">{error}</div>}
           <form onSubmit={handleAddMember}>
             <input
               placeholder="Name"
@@ -114,7 +133,7 @@ export default function Team() {
             />
             <input
               type="email"
-              placeholder="Email"
+              placeholder="Email (must be @aggies.ncat.edu)"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
