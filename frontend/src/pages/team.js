@@ -46,12 +46,6 @@ export default function Team() {
       return;
     }
 
-    // Validate email domain
-    if (!formData.email.endsWith("@aggies.ncat.edu")) {
-      setError("Email must be from @aggies.ncat.edu domain");
-      return;
-    }
-
     try {
       const res = await fetch(`/api/teams/${teamId}/members`, {
         method: "POST",
@@ -133,7 +127,7 @@ export default function Team() {
             />
             <input
               type="email"
-              placeholder="Email (must be @aggies.ncat.edu)"
+              placeholder="Email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
