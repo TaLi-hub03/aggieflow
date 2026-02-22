@@ -1,5 +1,59 @@
-/* Dashboard styles */
-.dashboard-root { padding: 20px; font-family: Arial, sans-serif; }
-.dashboard-cards { margin-top: 20px; display: flex; gap: 20px; }
-.dashboard-card { padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.08); width: 150px; background: #f8fafc; text-align: center; }
-.recent-tasks li { margin-bottom: 8px; }
+/* ============================================
+   DASHBOARD PAGE STYLES
+   ============================================ */
+
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.dashboard-header {
+  margin-bottom: 32px;
+}
+
+.dashboard-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.dashboard-subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+  font-weight: 400;
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .dashboard-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 24px 16px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 24px;
+  }
+
+  .dashboard-content {
+    gap: 24px;
+  }
+}
