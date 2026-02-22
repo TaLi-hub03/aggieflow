@@ -56,6 +56,7 @@ export default function Team() {
       {/* Add Member Form */}
       {showAddForm && (
         <div className="add-member-form">
+          {error && <div className="error-message">{error}</div>}
           <form onSubmit={handleAddMember}>
             <input
               placeholder="Name"
