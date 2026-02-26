@@ -1,46 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { io as ioClient } from "socket.io-client";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../styles/calendarPage.css";
+import format12HourTime from "../utils/time";
+import formatDate from "../utils/date";
+import useCalendarEvents from "../hooks/useCalendarEvents";
 
 function CalendarPage() {
   const [date, setDate] = useState(new Date());
-  // events keyed by date for highlighting and list
-  const [eventsByDate, setEventsByDate] = useState({});
 
-  // load events for selected date and cache
-  useEffect(() => {
-    const load = async () => {
-      const key = formatDate(date);
-      try {
-        const response = await fetch(`/api/events?date=${key}`);
-        if (response.ok) {
-          const data = await response.json();
-          setEventsByDate((prev) => ({ ...prev, [key]: data }));
-        } else {
-          console.error("failed to fetch events", response.status);
-          setEventsByDate((prev) => ({ ...prev, [key]: [] }));
-        }
-      } catch (err) {
-        console.error(err);
-        setEventsByDate((prev) => ({ ...prev, [key]: [] }));
-      }
-    };
-    load();
-  }, [date]);
+  // hook encapsulates events-by-date, socket, and addEvent
+  const { eventsByDate, ensureDateLoaded, addEvent } = useCalendarEvents();
 
-  // Socket.IO: listen for events added by other clients
+  // ensure events for current date are loaded
   useEffect(() => {
-    const socket = ioClient();
-    socket.on("eventAdded", (ev) => {
-      setEventsByDate((prev) => {
-        const list = prev[ev.date] ? [...prev[ev.date], ev] : [ev];
-        return { ...prev, [ev.date]: list };
-      });
-    });
-    return () => socket.disconnect();
-  }, []);
+    ensureDateLoaded(date);
+  }, [date, ensureDateLoaded]);
 
   // Modal / form state
   const [showModal, setShowModal] = useState(false);
@@ -48,22 +23,6 @@ function CalendarPage() {
   const [eventDate, setEventDate] = useState(() => formatDate(new Date()));
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
-
-
-  function formatDate(d) {
-    if (!d) return "";
-    const dd = new Date(d);
-    return dd.toISOString().split("T")[0];
-  }
-
-  function format12HourTime(military) {
-    if (!military) return "";
-    const [h, min] = military.split(":");
-    const hour = parseInt(h);
-    const suffix = hour >= 12 ? "PM" : "AM";
-    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
-    return `${displayHour}:${min} ${suffix}`;
-  }
 
   const selectedEvents = eventsByDate[formatDate(date)] || [];
 
@@ -89,23 +48,9 @@ function CalendarPage() {
       description: description || "",
     };
     try {
-      const response = await fetch("/api/events", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (response.ok) {
-        const added = await response.json();
-        const key = formatDate(eventDate);
-        setEventsByDate((prev) => {
-          const list = prev[key] ? [...prev[key], added] : [added];
-          return { ...prev, [key]: list };
-        });
-      } else {
-        console.error("failed to add event", response.status);
-      }
+      await addEvent(payload);
     } catch (err) {
-      console.error(err);
+      // addEvent already logs; you could show user-facing error here
     }
     setShowModal(false);
   }
@@ -133,8 +78,8 @@ function CalendarPage() {
             {selectedEvents.map((ev) => (
               <li key={ev.id} className="event-item">
                 <div className="event-main">
-                  <strong>{ev.title}</strong>
-                  {ev.time ? <span className="event-time"> — {format12HourTime(ev.time)}</span> : null}
+                  <strong className="event-title">{ev.title}</strong>
+                  {ev.time ? <span className="event-time">{format12HourTime(ev.time)}</span> : null}
                 </div>
                 {ev.description ? <div className="event-desc">{ev.description}</div> : null}
               </li>

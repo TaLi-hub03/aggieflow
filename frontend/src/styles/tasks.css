@@ -1,10 +1,328 @@
-/* Basic styles for Tasks page */
-.tasks-container { padding: 20px; font-family: Arial, sans-serif; }
-.tasks-form input, .tasks-form textarea { box-sizing: border-box; border: 1px solid #ddd; border-radius: 6px; }
-.tasks-form button { background: #3b82f6; color: #fff; border: none; border-radius: 6px; padding: 8px 12px; cursor: pointer; }
-.task-card { padding: 12px; border: 1px solid #eee; margin-bottom: 8px; border-radius: 8px; background: #fff; }
-.task-card .meta { font-size: 12px; color: #555; }
-.task-card.done { background: #f0fff0; }
-.team-list { width: 260px; }
-.team-list h3 { margin-top: 0; }
-.team-list button { background: #10b981; color: #fff; border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer; }
+/* Layout for tasks main and sidebar */
+.tasks-layout {
+	display: flex;
+	gap: 20px;
+}
+
+.tasks-main {
+	flex: 1;
+}
+
+/* Form and input enhancements */
+.tasks-form {
+	margin-bottom: 12px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: flex-start;
+}
+.tasks-input {
+	padding: 8px;
+	margin: 0;
+}
+.title-input {
+	width: 60%;
+}
+.assignee-input {
+	margin-left: 0;
+}
+.desc-input {
+	width: 100%;
+	min-height: 60px;
+	margin-top: 8px;
+}
+.tasks-desc-row {
+	width: 100%;
+}
+
+/* Buttons */
+.tasks-btn {
+	margin-left: 0;
+	padding: 8px 12px;
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+	font-size: 1em;
+}
+.submit-btn {
+	background: #3b82f6;
+	color: #fff;
+}
+.cancel-btn {
+	background: #e5e7eb;
+	color: #222;
+}
+.done-btn {
+	background: #10b981;
+	color: #fff;
+}
+.edit-btn {
+	background: #f59e42;
+	color: #fff;
+}
+.delete-btn {
+	background: #ef4444;
+	color: #fff;
+}
+.assign-btn {
+	background: #10b981;
+	color: #fff;
+}
+
+/* Task list and actions */
+.tasks-list {
+	margin-top: 16px;
+}
+.task-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.task-actions {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+.task-desc {
+	margin-top: 8px;
+}
+
+/* Team list sidebar */
+.team-list-items {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.team-list-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* Modernized Tasks Page Styles */
+
+.tasks-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 32px 20px;
+	font-family: 'Inter', Arial, sans-serif;
+	background: #f8fafc;
+	min-height: 100vh;
+}
+
+.tasks-container h1 {
+	font-size: 2rem;
+	font-weight: 700;
+	color: #1f2937;
+	margin: 0 0 24px 0;
+	letter-spacing: -0.5px;
+}
+
+.tasks-layout {
+	display: grid;
+	grid-template-columns: 2.5fr 1fr;
+	gap: 32px;
+}
+.tasks-main {
+	min-width: 0;
+}
+
+.tasks-form {
+	margin-bottom: 24px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	align-items: flex-start;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 2px 8px 0 rgba(34,34,59,0.07);
+	padding: 24px 20px 16px 20px;
+}
+.tasks-input {
+	padding: 10px 12px;
+	margin: 0;
+	font-size: 1rem;
+	background: #f9fafb;
+	border: 1.5px solid #d1d5db;
+	border-radius: 8px;
+	transition: border 0.15s, box-shadow 0.15s;
+}
+.tasks-input:focus {
+	border: 1.5px solid #3b82f6;
+	outline: none;
+	background: #fff;
+	box-shadow: 0 0 0 2px #dbeafe;
+}
+.title-input {
+	flex: 2 1 200px;
+	min-width: 120px;
+}
+.assignee-input {
+	flex: 1 1 120px;
+	min-width: 100px;
+}
+.desc-input {
+	width: 100%;
+	min-height: 60px;
+	margin-top: 8px;
+	resize: vertical;
+}
+.tasks-desc-row {
+	width: 100%;
+}
+
+.tasks-form button {
+	font-weight: 500;
+	letter-spacing: 0.01em;
+	transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.tasks-btn {
+	margin-left: 0;
+	padding: 8px 16px;
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+	font-size: 1em;
+	font-weight: 500;
+	box-shadow: 0 1px 2px 0 rgba(34,34,59,0.04);
+}
+.submit-btn {
+	background: #3b82f6;
+	color: #fff;
+}
+.cancel-btn {
+	background: #e5e7eb;
+	color: #222;
+}
+.done-btn {
+	background: #10b981;
+	color: #fff;
+}
+.edit-btn {
+	background: #f59e42;
+	color: #fff;
+}
+.delete-btn {
+	background: #ef4444;
+	color: #fff;
+}
+.assign-btn {
+	background: #10b981;
+	color: #fff;
+}
+.tasks-btn:hover, .assign-btn:hover {
+	filter: brightness(0.93);
+	box-shadow: 0 2px 8px 0 rgba(59,130,246,0.08);
+}
+
+.tasks-list {
+	margin-top: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+.task-card {
+	padding: 20px 24px 16px 24px;
+	border-radius: 16px;
+	background: #fff;
+	box-shadow: 0 2px 8px 0 rgba(34,34,59,0.07), 0 1.5px 4px 0 rgba(34,34,59,0.04);
+	border: none;
+	transition: box-shadow 0.18s, background 0.18s;
+	margin-bottom: 0;
+}
+.task-card:hover {
+	box-shadow: 0 4px 16px 0 rgba(34,34,59,0.13), 0 2px 8px 0 rgba(34,34,59,0.08);
+	background: #f3f4f6;
+}
+.task-card.done {
+	background: #e6fbe6;
+	opacity: 0.85;
+}
+.task-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 16px;
+}
+.task-actions {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+}
+.task-desc {
+	margin-top: 10px;
+	color: #374151;
+	font-size: 1.04em;
+}
+.meta {
+	font-size: 0.98em;
+	color: #64748b;
+	margin-top: 4px;
+}
+
+.team-list {
+	width: 100%;
+	max-width: 320px;
+	background: #fff;
+	border-radius: 14px;
+	box-shadow: 0 2px 8px 0 rgba(34,34,59,0.07);
+	padding: 24px 20px 20px 20px;
+	margin-left: 0;
+	align-self: flex-start;
+}
+.team-list h3 {
+	margin-top: 0;
+	font-size: 1.18rem;
+	font-weight: 600;
+	color: #1f2937;
+	margin-bottom: 16px;
+}
+.team-list-items {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.team-list-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 8px 0;
+}
+.team-list button {
+	font-size: 1em;
+	font-weight: 500;
+	border-radius: 6px;
+	padding: 7px 18px;
+	border: none;
+	background: #10b981;
+	color: #fff;
+	transition: background 0.15s, color 0.15s;
+}
+.team-list button:hover {
+	background: #059669;
+}
+
+@media (max-width: 1024px) {
+	.tasks-layout {
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+	.team-list {
+		max-width: 100%;
+		margin-top: 24px;
+	}
+}
+@media (max-width: 768px) {
+	.tasks-container {
+		padding: 24px 12px;
+	}
+	.tasks-container h1 {
+		font-size: 1.3rem;
+	}
+	.tasks-form {
+		padding: 16px 8px 10px 8px;
+	}
+	.task-card {
+		padding: 14px 10px 10px 10px;
+	}
+}

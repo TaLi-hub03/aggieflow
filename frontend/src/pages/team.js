@@ -1,85 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { io as ioClient } from "socket.io-client";
+import React, { useState } from "react";
 import "../styles/team.css";
+import useTeamMembers from "../hooks/useTeamMembers";
 
 export default function Team() {
-  const [members, setMembers] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", role: "Member" });
-  const [error, setError] = useState("");
-  const [notification, setNotification] = useState("");
-  const teamId = 1; // default team
+  const teamId = 1;
+  const { members, addMember, removeMember, updateStatus } = useTeamMembers(teamId);
 
-  useEffect(() => {
-    const loadMembers = async () => {
-      try {
-        const res = await fetch(`/api/teams/${teamId}/members`);
-        if (res.ok) {
-          const data = await res.json();
-          setMembers(data);
-        }
-      } catch (err) {
-        console.error("Failed to load team members", err);
-      }
-    };
-    loadMembers();
-
-    const socket = ioClient();
-    socket.on("memberAdded", ({ teamId: tid, member }) => {
-      if (tid === teamId) setMembers((prev) => [...prev, member]);
-    });
-    socket.on("memberRemoved", ({ teamId: tid, memberId }) => {
-      if (tid === teamId) setMembers((prev) => prev.filter(m => m.id !== memberId));
-    });
-    socket.on("memberStatusChanged", ({ teamId: tid, memberId, status }) => {
-      if (tid === teamId) setMembers((prev) => prev.map(m => m.id === memberId ? { ...m, status } : m));
-    });
-    return () => socket.disconnect();
-  }, [teamId]);
+  const onlineCount = members.filter(m => m.status === "online").length;
+  const totalTasks = members.reduce((sum, m) => sum + m.tasksAssigned, 0);
+  const avgWorkload = totalTasks > 0 ? (totalTasks / members.length).toFixed(1) : 0;
 
   async function handleAddMember(e) {
     e.preventDefault();
-    setError("");
-    
-    if (!formData.name.trim() || !formData.email.trim()) {
-      setError("Name and email are required");
-      return;
-    }
-
+    if (!formData.name.trim() || !formData.email.trim()) return;
     try {
-      const res = await fetch(`/api/teams/${teamId}/members`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      if (res.ok) {
-        const newMember = await res.json();
-        setMembers((prev) => [...prev, newMember]);
-        setFormData({ name: "", email: "", role: "Member" });
-        setShowAddForm(false);
-        
-        // Show success notification
-        setNotification(`✓ ${newMember.name} has been added to the team!`);
-        setTimeout(() => setNotification(""), 4000);
-      } else {
-        const errMsg = await res.text();
-        setError("Failed to add member: " + errMsg);
-      }
+      await addMember(formData);
+      setFormData({ name: "", email: "", role: "Member" });
+      setShowAddForm(false);
     } catch (err) {
-      console.error("Failed to add member", err);
-      setError("Error: " + err.message);
+      alert("Failed to add member: " + err.message);
     }
   }
 
   async function handleRemoveMember(memberId) {
     if (window.confirm("Remove this member?")) {
       try {
-        const res = await fetch(`/api/teams/${teamId}/members/${memberId}`, { method: "DELETE" });
-        if (res.ok) {
-          setMembers((prev) => prev.filter(m => m.id !== memberId));
-        }
+        await removeMember(memberId);
       } catch (err) {
-        console.error("Failed to remove member", err);
+        alert("Failed to remove member: " + err.message);
       }
     }
   }
@@ -87,27 +37,15 @@ export default function Team() {
   async function toggleMemberStatus(member) {
     const newStatus = member.status === "online" ? "offline" : "online";
     try {
-      const res = await fetch(`/api/teams/${teamId}/members/${member.id}/status`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (res.ok) {
-        setMembers((prev) => prev.map(m => m.id === member.id ? { ...m, status: newStatus } : m));
-      }
+      await updateStatus(member, newStatus);
     } catch (err) {
-      console.error("Failed to update status", err);
+      alert("Failed to update status: " + err.message);
     }
   }
 
-  const onlineCount = members.filter(m => m.status === "online").length;
-  const totalTasks = members.reduce((sum, m) => sum + m.tasksAssigned, 0);
-  const avgWorkload = totalTasks > 0 ? (totalTasks / members.length).toFixed(1) : 0;
-
   return (
     <div className="team-page">
-      {notification && <div className="notification success">{notification}</div>}
-      
+      {/* Header */}
       <div className="team-header">
         <h1>Team</h1>
         <button className="add-btn" onClick={() => setShowAddForm(!showAddForm)}>
@@ -115,6 +53,7 @@ export default function Team() {
         </button>
       </div>
 
+      {/* Add Member Form */}
       {showAddForm && (
         <div className="add-member-form">
           {error && <div className="error-message">{error}</div>}
@@ -122,17 +61,17 @@ export default function Team() {
             <input
               placeholder="Name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={e => setFormData({ ...formData, name: e.target.value })}
               required
             />
             <input
               type="email"
               placeholder="Email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={e => setFormData({ ...formData, email: e.target.value })}
               required
             />
-            <select value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value })}>
+            <select value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value })}>
               <option value="Member">Member</option>
               <option value="Admin">Admin</option>
               <option value="Viewer">Viewer</option>
@@ -142,6 +81,7 @@ export default function Team() {
         </div>
       )}
 
+      {/* Team Stats */}
       <div className="team-stats">
         <div className="stat-card">
           <h3>Total Members</h3>
@@ -161,14 +101,18 @@ export default function Team() {
         </div>
       </div>
 
+      {/* Members List */}
       <div className="members-section">
         <h2>Team Members</h2>
         <div className="members-grid">
           {members.length ? (
-            members.map((member) => (
+            members.map(member => (
               <div key={member.id} className="member-card">
                 <div className="member-header">
-                  <div className="member-avatar" style={{ backgroundColor: member.status === "online" ? "#10b981" : "#6b7280" }}>
+                  <div
+                    className="member-avatar"
+                    style={{ backgroundColor: member.status === "online" ? "#10b981" : "#6b7280" }}
+                  >
                     {member.name.charAt(0).toUpperCase()}
                   </div>
                   <div className="member-info">
@@ -176,7 +120,11 @@ export default function Team() {
                     <p className="member-email">{member.email}</p>
                     <div className="member-meta">
                       <span className={`role ${member.role.toLowerCase()}`}>{member.role}</span>
-                      <span className={`status ${member.status}`} onClick={() => toggleMemberStatus(member)}>
+                      <span
+                        className={`status ${member.status}`}
+                        onClick={() => toggleMemberStatus(member)}
+                        title="Toggle online/offline"
+                      >
                         ● {member.status}
                       </span>
                     </div>
