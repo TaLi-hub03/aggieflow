@@ -5,6 +5,7 @@ import useTeamMembers from "../hooks/useTeamMembers";
 export default function Team() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", role: "Member" });
+  const [error, setError] = useState("");
   const teamId = 1;
   const { members, addMember, removeMember, updateStatus } = useTeamMembers(teamId);
 
@@ -18,9 +19,10 @@ export default function Team() {
     try {
       await addMember(formData);
       setFormData({ name: "", email: "", role: "Member" });
+      setError("");
       setShowAddForm(false);
     } catch (err) {
-      alert("Failed to add member: " + err.message);
+      setError("Failed to add member: " + err.message);
     }
   }
 
