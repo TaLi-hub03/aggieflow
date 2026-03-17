@@ -1,14 +1,10 @@
-const nodemailer = require("nodemailer");
+// emailService.js
+const { MailtrapClient } = require("mailtrap");
 
-// Create transporter using Gmail (or you can use other services)
-// To use Gmail, you'll need to create an App Password: https://support.google.com/accounts/answer/185833
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+// Mailtrap API token
+const TOKEN = "2fdcb00026aea07729ab58f7bad72f45";
+
+const client = new MailtrapClient({ token: TOKEN });
 
 /**
  * Send a welcome email to a new team member
@@ -18,9 +14,16 @@ const transporter = nodemailer.createTransport({
  */
 async function sendWelcomeEmail(memberEmail, memberName, teamName = "AggieFlow Team") {
   try {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: memberEmail,
+    const sender = {
+      email: "hello@demomailtrap.co",
+      name: "AggieFlow Team",
+    };
+
+    const recipients = [{ email: memberEmail }];
+
+    const res = await client.send({
+      from: sender,
+      to: recipients,
       subject: `Welcome to ${teamName}!`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -56,11 +59,11 @@ async function sendWelcomeEmail(memberEmail, memberName, teamName = "AggieFlow T
           </p>
         </div>
       `,
-    };
+      category: "Welcome Email",
+    });
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Welcome email sent:", info.response);
-    return { success: true, messageId: info.messageId };
+    console.log("Welcome email sent:", res);
+    return { success: true, response: res };
   } catch (error) {
     console.error("Error sending welcome email:", error);
     return { success: false, error: error.message };
@@ -76,9 +79,16 @@ async function sendWelcomeEmail(memberEmail, memberName, teamName = "AggieFlow T
  */
 async function sendTaskAssignmentEmail(memberEmail, memberName, taskTitle, assignedBy = "Team") {
   try {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: memberEmail,
+    const sender = {
+      email: "hello@demomailtrap.co",
+      name: "AggieFlow Team",
+    };
+
+    const recipients = [{ email: memberEmail }];
+
+    const res = await client.send({
+      from: sender,
+      to: recipients,
       subject: `New Task Assigned: ${taskTitle}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -106,11 +116,11 @@ async function sendTaskAssignmentEmail(memberEmail, memberName, taskTitle, assig
           </p>
         </div>
       `,
-    };
+      category: "Task Assignment",
+    });
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Task assignment email sent:", info.response);
-    return { success: true, messageId: info.messageId };
+    console.log("Task assignment email sent:", res);
+    return { success: true, response: res };
   } catch (error) {
     console.error("Error sending task assignment email:", error);
     return { success: false, error: error.message };

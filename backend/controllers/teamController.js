@@ -1,6 +1,7 @@
+const { sendWelcomeEmail } = require("../services/emailService"); // Mailtrap
+
 let teams = [];
 let defaultTeamId = 1;
-const { sendWelcomeEmail } = require("../services/emailService");
 
 // Initialize with a default team
 if (teams.length === 0) {
@@ -17,9 +18,7 @@ if (teams.length === 0) {
   });
 }
 
-const getTeams = (req, res) => {
-  res.json(teams);
-};
+const getTeams = (req, res) => res.json(teams);
 
 const getTeamMembers = (req, res) => {
   const teamId = parseInt(req.params.teamId);
@@ -42,7 +41,7 @@ const createTeam = (req, res) => {
   res.status(201).json(newTeam);
 };
 
-const addMember = (req, res, io) => {
+const addMember = async (req, res, io) => {
   const teamId = parseInt(req.params.teamId);
   const team = teams.find(t => t.id === teamId);
   if (!team) return res.status(404).send("Team not found");
@@ -63,11 +62,12 @@ const addMember = (req, res, io) => {
   if (!team.members) team.members = [];
   team.members.push(newMember);
 
-  // Send welcome email (async, don't block response)
-  sendWelcomeEmail(email, name, team.name).catch(err => 
-    console.error("Background email send failed:", err)
-  );
+  // Mailtrap Welcome Email
+  sendWelcomeEmail(email, name, team.name)
+    .then(() => console.log(`Welcome email sent to ${email}`))
+    .catch(err => console.error("Error sending welcome email:", err));
 
+  // Emit socket update
   if (io) io.emit("memberAdded", { teamId, member: newMember });
 
   res.status(201).json(newMember);
@@ -107,3 +107,4 @@ const updateMemberStatus = (req, res, io) => {
 };
 
 module.exports = { getTeams, getTeamMembers, createTeam, addMember, removeMember, updateMemberStatus };
+
