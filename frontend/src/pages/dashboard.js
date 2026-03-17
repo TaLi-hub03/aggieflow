@@ -14,6 +14,10 @@ function Dashboard() {
   const completedTasks = useMemo(() => (tasks || []).filter(t => t.completed).length, [tasks]);
   const inProgressTasks = totalTasks - completedTasks;
 
+  if (loading) {
+    return <div className="dashboard-container">Loading…</div>;
+  }
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">

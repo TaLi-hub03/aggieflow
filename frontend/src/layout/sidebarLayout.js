@@ -7,12 +7,12 @@ function SidebarLayout() {
     <div className="layout">
       {/* Sidebar */}
       <div className="sidebar">
-        <NavLink to="/" className="logo">
+        <NavLink to="/dashboard" className="logo">
           <img src="/logo.png" alt="AggieFlow Logo" className="logo-img" />
         </NavLink>
         <ul>
           <li>
-            <NavLink to="/" className={({ isActive }) => (isActive ? "active-link" : "")}>
+            <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active-link" : "")}>
               Dashboard
             </NavLink>
           </li>

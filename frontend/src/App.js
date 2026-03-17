@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SidebarLayout from "./layout/sidebarLayout";
 
+import Landing from "./pages/landing";
 import Dashboard from "./pages/dashboard";
 import Tasks from "./pages/tasks";
 import CalendarPage from "./pages/calendarPage";
@@ -11,9 +12,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Wrap all pages with the sidebar layout */}
+        <Route path="/" element={<Landing />} />
+
+        {/* Wrap all authenticated pages with the sidebar layout */}
         <Route element={<SidebarLayout />}>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/team" element={<Team />} />
