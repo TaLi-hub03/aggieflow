@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const teamController = require("../controllers/teamController");
-const { sendWelcomeEmail } = require("../emailService"); // <-- import at top
+const { sendWelcomeEmail } = require("../services/emailService");
 
 let io;
 router.setSocketIO = (socketIO) => { io = socketIO; };

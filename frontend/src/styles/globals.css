@@ -7,6 +7,34 @@ html, body, #root {
   box-sizing: border-box;
 }
 
+/* Light mode (default) */
+:root {
+  --bg-primary: #fcfdff;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f3f4f6;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --accent-primary: #1976d2;
+  --accent-hover: #1565c0;
+}
+
+/* Dark mode */
+html[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --border-color: #475569;
+  --input-bg: #1e293b;
+  --input-border: #475569;
+  --accent-primary: #3b82f6;
+  --accent-hover: #2563eb;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -14,8 +42,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #fcfdff;
+  background: var(--bg-primary);
   color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
 }
 
 code {

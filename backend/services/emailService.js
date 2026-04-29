@@ -1,4 +1,3 @@
-// emailService.js
 const { MailtrapClient } = require("mailtrap");
 
 // Mailtrap API token

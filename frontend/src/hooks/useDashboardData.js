@@ -50,6 +50,18 @@ export default function useDashboardData() {
       });
     });
 
+    socket.on('eventUpdated', (ev) => {
+      setEvents((prev) => {
+        const updated = prev.map((e) => e.id === ev.id ? ev : e);
+        updated.sort(sortByDate);
+        return updated;
+      });
+    });
+
+    socket.on('eventDeleted', (eventId) => {
+      setEvents((prev) => prev.filter((e) => e.id !== eventId));
+    });
+
     socket.on('taskAdded', (t) => setTasks((prev) => [...prev, t]));
     socket.on('taskUpdated', (t) => setTasks((prev) => prev.map(p => p.id === t.id ? t : p)));
     socket.on('taskDeleted', (t) => setTasks((prev) => prev.filter(p => p.id !== t.id)));

@@ -98,9 +98,17 @@
 .event-item { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
 .event-main {
   display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.event-content {
+  display: flex;
   gap: 8px;
   align-items: center;
-  justify-content: space-between;
+  flex: 1;
+  flex-wrap: wrap;
 }
 
 .event-title {
@@ -119,6 +127,37 @@
   color: #666;
 }
 
+.event-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.event-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.event-btn.edit {
+  color: #2563eb;
+}
+
+.event-btn.edit:hover {
+  background-color: #dbeafe;
+}
+
+.event-btn.delete {
+  color: #dc2626;
+}
+
+.event-btn.delete:hover {
+  background-color: #fee2e2;
+}
+
 .event-desc {
   color: #444;
   margin-top: 6px;
@@ -127,11 +166,24 @@
 
 /* Highlight days with events */
 .react-calendar__tile.has-event {
-  background: #bfefff; /* baby blue */
-  border-radius: 6px;
+  background: #dbeafe;
+  color: #1e3a8a;
+  border-radius: 10px;
+  position: relative;
 }
 
 .react-calendar__tile.has-event:enabled:hover,
 .react-calendar__tile.has-event:enabled:focus {
-  background: #aee8ff;
+  background: #bfdbfe;
+}
+
+.react-calendar__tile.has-event .event-dot {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 6px;
+  height: 6px;
+  background: #2563eb;
+  border-radius: 50%;
+  transform: translateX(-50%);
 }

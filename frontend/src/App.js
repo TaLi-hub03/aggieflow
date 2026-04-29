@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { SettingsProvider } from "./hooks/useSettings";
 import SidebarLayout from "./layout/sidebarLayout";
 
 import Landing from "./pages/landing";
@@ -10,20 +11,22 @@ import Settings from "./pages/settings";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Landing />} />
+    <SettingsProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Landing />} />
 
-        {/* Wrap all authenticated pages with the sidebar layout */}
-        <Route element={<SidebarLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/tasks" element={<Tasks />} />
-          <Route path="/calendar" element={<CalendarPage />} />
-          <Route path="/team" element={<Team />} />
-          <Route path="/settings" element={<Settings />} />
-        </Route>
-      </Routes>
-    </Router>
+          {/* Wrap all authenticated pages with the sidebar layout */}
+          <Route element={<SidebarLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/tasks" element={<Tasks />} />
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/team" element={<Team />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
+        </Routes>
+      </Router>
+    </SettingsProvider>
   );
 }
 
