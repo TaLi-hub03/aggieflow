@@ -1,59 +1,154 @@
-/* ============================================
-   DASHBOARD PAGE STYLES
-   ============================================ */
-
-.dashboard-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 20px;
+:root {
+  --accent-primary: #4f46e5;
+  --accent-secondary: #7c3aed;
+  --bg-pill: rgba(255, 255, 255, 0.8);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
 }
 
-.dashboard-header {
+.dashboard-container {
+  padding: 32px;
+  background: var(--bg-primary);
+}
+
+/* --- Improved Status Header --- */
+.status-header {
+  display: flex;
+  gap: 12px;
   margin-bottom: 32px;
 }
 
-.dashboard-header h1 {
-  font-size: 32px;
+.status-pill, .date-pill {
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: white;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: var(--glass-shadow);
+}
+
+.status-pill.online { color: #059669; }
+.status-pill.syncing { color: #d97706; }
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  border-radius: 50%;
+  margin-right: 10px;
+  animation: pulse 2s infinite;
+}
+
+/* --- Optimized Workload Card --- */
+.workload-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 20px 28px;
+  border-radius: 24px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--glass-shadow);
+  gap: 24px; /* Fixes the "too close" issue */
+}
+
+.progress-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: conic-gradient(var(--accent-primary) var(--progress), #f1f5f9 0deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-inner {
+  width: 52px;
+  height: 52px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-value {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.workload-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* Adds space between Goal and Stats */
+}
+
+.workload-title {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   font-weight: 700;
-  color: #1f2937;
-  margin: 0 0 8px 0;
-  letter-spacing: -0.5px;
 }
 
-.dashboard-subtitle {
+.workload-stats {
   font-size: 16px;
-  color: #6b7280;
-  margin: 0;
-  font-weight: 400;
+  color: var(--text-primary);
 }
 
-.dashboard-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  margin-top: 32px;
+/* --- Polished Quick Actions --- */
+.quick-actions-grid {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 40px;
 }
 
-/* ============================================
-   RESPONSIVE
-   ============================================ */
+.action-button {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-@media (max-width: 1024px) {
-  .dashboard-content {
-    grid-template-columns: 1fr;
-  }
+.action-button:hover {
+  background: var(--accent-primary);
+  color: white;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+}
+
+.action-button:hover .icon-box {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.icon-box {
+  width: 44px;
+  height: 44px;
+  background: #f8fafc;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: background 0.2s;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @media (max-width: 768px) {
-  .dashboard-container {
-    padding: 24px 16px;
-  }
-
-  .dashboard-header h1 {
-    font-size: 24px;
-  }
-
-  .dashboard-content {
-    gap: 24px;
-  }
+  .quick-actions-grid { flex-direction: column; }
+  .dashboard-header { flex-direction: column; align-items: flex-start; gap: 24px; }
 }
